@@ -1,0 +1,1238 @@
+{% extends "base.html" %}
+
+
+
+
+
+
+
+{% block title %}Analysis Results - AI Fashion Advisor{% endblock %}
+
+
+
+
+
+
+
+{% block extra_css %}
+
+
+
+<style>
+
+
+
+    .results-container {
+
+
+
+        max-width: 800px;
+
+
+
+        margin: 0 auto;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .analyzed-image {
+
+
+
+        max-width: 100%;
+
+
+
+        max-height: 300px;
+
+
+
+        border-radius: 8px;
+
+
+
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+
+
+        margin-bottom: 20px;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .skin-tone-result {
+
+
+
+        background-color: #f8f9fa;
+
+
+
+        padding: 20px;
+
+
+
+        border-radius: 10px;
+
+
+
+        margin-bottom: 30px;
+
+
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+
+
+    }
+
+
+
+    
+
+
+
+    .color-swatch {
+
+
+
+        width: 50px;
+
+
+
+        height: 50px;
+
+
+
+        border-radius: 50%;
+
+
+
+        display: inline-block;
+
+
+
+        margin-right: 10px;
+
+
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+
+
+    }
+
+
+
+    
+
+
+
+    .color-card {
+
+
+
+        display: flex;
+
+
+
+        align-items: center;
+
+
+
+        margin-bottom: 15px;
+
+
+
+        padding: 10px;
+
+
+
+        border-radius: 8px;
+
+
+
+        background-color: white;
+
+
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+
+
+    }
+
+
+
+    
+
+
+
+    .color-info {
+
+
+
+        margin-left: 15px;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .color-name {
+
+
+
+        font-weight: bold;
+
+
+
+        margin-bottom: 5px;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .color-description {
+
+
+
+        font-size: 0.9rem;
+
+
+
+        color: #6c757d;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .section-title {
+
+
+
+        margin-top: 40px;
+
+
+
+        margin-bottom: 20px;
+
+
+
+        padding-bottom: 10px;
+
+
+
+        border-bottom: 2px solid #e9ecef;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .shopping-item {
+
+
+
+        margin-bottom: 20px;
+
+
+
+        padding: 15px;
+
+
+
+        border-radius: 8px;
+
+
+
+        background-color: white;
+
+
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+
+
+    }
+
+
+
+    
+
+
+
+    .shopping-item-name {
+
+
+
+        font-weight: bold;
+
+
+
+        margin-bottom: 5px;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .shopping-item-description {
+
+
+
+        margin-bottom: 10px;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .shopping-item-details {
+
+
+
+        font-size: 0.9rem;
+
+
+
+        color: #6c757d;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .shopping-item-stores {
+
+
+
+        margin-top: 10px;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .store-badge {
+
+
+
+        display: inline-block;
+
+
+
+        padding: 5px 10px;
+
+
+
+        margin-right: 5px;
+
+
+
+        margin-bottom: 5px;
+
+
+
+        border-radius: 20px;
+
+
+
+        background-color: #e9ecef;
+
+
+
+        font-size: 0.8rem;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .ai-insights {
+
+
+
+        background: linear-gradient(135deg, rgba(127, 83, 172, 0.1), rgba(100, 125, 238, 0.1));
+
+
+
+        border-radius: 16px;
+
+
+
+        padding: 2rem;
+
+
+
+        margin-bottom: 2rem;
+
+
+
+        border: 1px solid rgba(255, 255, 255, 0.05);
+
+
+
+        display: none;
+
+
+
+    }
+
+
+
+
+
+
+
+    .ai-insights-header {
+
+
+
+        margin-bottom: 1.5rem;
+
+
+
+    }
+
+
+
+
+
+
+
+    .ai-insights-content {
+
+
+
+        display: grid;
+
+
+
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+
+
+        gap: 1.5rem;
+
+
+
+    }
+
+
+
+
+
+
+
+    .insight-item {
+
+
+
+        display: flex;
+
+
+
+        gap: 1rem;
+
+
+
+        background-color: var(--card-bg);
+
+
+
+        padding: 1.5rem;
+
+
+
+        border-radius: 12px;
+
+
+
+        border: 1px solid rgba(255, 255, 255, 0.05);
+
+
+
+    }
+
+
+
+
+
+
+
+    .insight-icon {
+
+
+
+        font-size: 1.8rem;
+
+
+
+        color: var(--gradient-start);
+
+
+
+        display: flex;
+
+
+
+        align-items: flex-start;
+
+
+
+        justify-content: center;
+
+
+
+        min-width: 40px;
+
+
+
+    }
+
+
+
+
+
+
+
+    .insight-text {
+
+
+
+        flex: 1;
+
+
+
+    }
+
+
+
+
+
+
+
+    .insight-text h4 {
+
+
+
+        margin-bottom: 0.5rem;
+
+
+
+        font-weight: 600;
+
+
+
+    }
+
+
+
+
+
+
+
+    @media (max-width: 767px) {
+
+
+
+        .ai-insights-content {
+
+
+
+            grid-template-columns: 1fr;
+
+
+
+        }
+
+
+
+    }
+
+
+
+    
+
+
+
+    .color-chip {
+
+
+
+        width: 40px;
+
+
+
+        height: 40px;
+
+
+
+        border-radius: 50%;
+
+
+
+        display: inline-block;
+
+
+
+        margin-right: 10px;
+
+
+
+        margin-bottom: 10px;
+
+
+
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+
+
+        cursor: pointer;
+
+
+
+        transition: transform 0.2s ease;
+
+
+
+    }
+
+
+
+    
+
+
+
+    .color-chip:hover {
+
+
+
+        transform: scale(1.1);
+
+
+
+    }
+
+
+
+    
+
+
+
+    .badge.bg-gradient-subtle {
+
+
+
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+
+
+
+        color: white;
+
+
+
+    }
+
+
+
+</style>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block content %}
+
+
+
+<div class="container">
+
+
+
+    <h1 class="gradient-text text-center mb-4">Your Fashion Analysis</h1>
+
+
+
+    
+
+
+
+    <!-- Local AI Insights -->
+
+
+
+    <div id="ai-insights" class="ai-insights mb-4"></div>
+
+
+
+    
+
+
+
+    <!-- Server Analysis Results -->
+
+
+
+    <div class="row">
+
+
+
+        <div class="col-lg-4 mb-4">
+
+
+
+            <div class="results-section">
+
+
+
+                <h2 class="h4 mb-3">Your Image</h2>
+
+
+
+                {% if result.image_path %}
+
+
+
+                <img src="{{ url_for('static', filename=result.image_path) }}" alt="Analyzed image" class="results-image img-fluid mb-3">
+
+
+
+                {% else %}
+
+
+
+                <p class="text-muted">No image available</p>
+
+
+
+                {% endif %}
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+        
+
+
+
+        <div class="col-lg-8">
+
+
+
+            <div class="results-section mb-4">
+
+
+
+                <h2 class="h4 mb-3">Skin Tone Analysis</h2>
+
+
+
+                <div class="row">
+
+
+
+                    <div class="col-md-6">
+
+
+
+                        <div class="mb-3">
+
+
+
+                            <h3 class="h5 mb-2">Your Skin Tone</h3>
+
+
+
+                            <p>{{ result.skin_tone }}</p>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    <div class="col-md-6">
+
+
+
+                        <div class="mb-3">
+
+
+
+                            <h3 class="h5 mb-2">Your Undertone</h3>
+
+
+
+                            <p>{{ result.undertone }}</p>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+
+            
+
+
+
+            <div class="results-section mb-4">
+
+
+
+                <h2 class="h4 mb-3">Recommended Colors</h2>
+
+
+
+                <div class="row">
+
+
+
+                    <div class="col-md-6">
+
+
+
+                        <h3 class="h5 mb-2">Clothing Colors</h3>
+
+
+
+                        <div class="mb-3">
+
+
+
+                            {% for color in result.clothing_colors %}
+
+
+
+                            <div class="color-chip" style="background-color: {{ color }};" data-color-name="{{ color }}"></div>
+
+
+
+                            {% endfor %}
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    <div class="col-md-6">
+
+
+
+                        <h3 class="h5 mb-2">Makeup Colors</h3>
+
+
+
+                        <div class="mb-3">
+
+
+
+                            {% for color in result.makeup_colors %}
+                            <div class="color-chip" style="background-color: {{ color }};" data-color-name="{{ color }}"></div>
+                            {% endfor %}
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+                <div class="mb-3">
+                    <h3 class="h5 mb-2">Accessory Colors</h3>
+                    <div>
+                        {% for color in result.accessory_colors %}
+                        <div class="color-chip" style="background-color: {{ color }};" data-color-name="{{ color }}"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+    
+
+
+
+    <div class="row">
+
+
+
+        <div class="col-12">
+
+
+
+            <div class="results-section mb-4">
+
+
+
+                <h2 class="h4 mb-3">Detected Clothing</h2>
+
+
+
+                {% if result.detected_clothing %}
+
+
+
+                <div class="row">
+
+
+
+                    {% for item in result.detected_clothing %}
+
+
+
+                    <div class="col-md-4 mb-3">
+
+
+
+                        <div class="recommendation-card">
+
+
+
+                            <h3 class="h5">{{ item }}</h3>
+
+
+
+                            {% if item in result.outfit_recommendations %}
+
+
+
+                            <p>{{ result.outfit_recommendations[item] }}</p>
+
+
+
+                            {% endif %}
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    {% endfor %}
+
+
+
+                </div>
+
+
+
+                {% else %}
+
+
+
+                <p class="text-muted">No clothing detected. Try uploading a different image with visible clothing.</p>
+
+
+
+                {% endif %}
+
+
+
+            </div>
+
+
+
+            
+
+
+
+            <div class="results-section mb-4">
+
+
+
+                <h2 class="h4 mb-3">Shopping Suggestions</h2>
+
+
+
+                {% if result.shopping_suggestions %}
+
+
+
+                <div class="row">
+
+
+
+                    {% for category, suggestions in result.shopping_suggestions.items() %}
+
+
+
+                    <div class="col-md-4 mb-3">
+
+
+
+                        <div class="recommendation-card">
+
+
+
+                            <h3 class="h5">{{ category }}</h3>
+
+
+
+                            <ul class="list-unstyled">
+
+
+
+                                {% for suggestion in suggestions %}
+
+
+
+                                <li class="mb-2">{{ suggestion }}</li>
+
+
+
+                                {% endfor %}
+
+
+
+                            </ul>
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+
+                    {% endfor %}
+
+
+
+                </div>
+
+
+
+                {% else %}
+
+
+
+                <p class="text-muted">No shopping suggestions available.</p>
+
+
+
+                {% endif %}
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+    
+
+
+
+    <div class="row justify-content-center mt-4 mb-5">
+
+
+
+        <div class="col-md-8 text-center">
+
+
+
+            <h2 class="h4 mb-3">Continue Your Fashion Journey</h2>
+
+
+
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+
+
+
+                <a href="/wardrobe" class="btn btn-gradient">
+
+
+
+                    <i class="fas fa-tshirt me-2"></i>Virtual Wardrobe
+
+
+
+                </a>
+
+
+
+                <a href="/upload" class="btn btn-outline">
+
+
+
+                    <i class="fas fa-upload me-2"></i>Upload Another Image
+
+
+
+                </a>
+
+
+
+                <a href="/chat" class="btn btn-outline">
+
+
+
+                    <i class="fas fa-comment-alt me-2"></i>Ask Fashion Assistant
+
+
+
+                </a>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+{% block extra_js %}
+
+
+
+<script src="{{ url_for('static', filename='js/results.js') }}"></script>
+
+
+
+{% endblock %} 
